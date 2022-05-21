@@ -2,5 +2,5 @@
 
 namespace mtask
 {
-int test() { return 42; }
+	int test() { return 42; }
 }

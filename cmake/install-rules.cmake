@@ -5,6 +5,7 @@ include(GNUInstallDirs)
 install(
 	DIRECTORY
 		"include/"
+		"${PROJECT_BINARY_DIR}/export/"
 	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 	COMPONENT mtask_Development
 )

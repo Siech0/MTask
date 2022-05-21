@@ -7,7 +7,7 @@
 build/
 prefix/
 cmake_install.cmake
-build.ninja
+*.ninja
 
 # Coverage
 cmake/open-cpp-coverage.cmake
