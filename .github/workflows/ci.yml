@@ -71,6 +71,13 @@ jobs:
         && sudo apt-get install doxygen build-essential make -q -y
     # We need to configure cmake before generating documentation
     #  as cmake will output the relevant Doxyfile.
+    - name: Install Conan
+      shell: bash
+      run: |
+        pip3 install "conan<2"
+        conan profile new default --detect
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install . -b missing
     - name: Configure
       shell: pwsh
       run: cmake --preset=ci-ubuntu
