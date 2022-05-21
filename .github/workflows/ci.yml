@@ -44,7 +44,7 @@ jobs:
         fi
         conan install . -b missing
     - name: Configure
-      shell: push
+      shell: pwsh
       run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
         -D BUILD_SHARED_LIBS=${{ matrix.shared }}
     - name: Build
