@@ -13,5 +13,11 @@ option(MTASK_BUILD_TESTS "Build test artifacts." OFF)
 # Build benchmarks
 option(MTASK_BUILD_BENCHMARKS "Build benchmark artifacts." OFF)
 
+# Build documentation
+option(MTASK_BUILD_DOCS "Build documentation artifacts." OFF)
+
 # Generate install targets
 option(MTASK_INSTALL "Generate install targets." ${PROJECT_IS_TOP_LEVEL})
+
+# Enable linting
+option(MTASK_ENABLE_FORMAT "Generate clang-format targets." ${PROEJCT_IS_TOP_LEVEL})

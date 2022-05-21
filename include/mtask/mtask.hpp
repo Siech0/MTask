@@ -3,6 +3,6 @@
 
 namespace mtask
 {
-	MTASK_EXPORT
-	int test();
-}
+MTASK_EXPORT
+int test();
+} // namespace mtask

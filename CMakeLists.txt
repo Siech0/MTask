@@ -71,6 +71,14 @@ if(NOT BUILD_SHARED_LIBS)
 	target_compile_definitions(mtask_mtask PUBLIC MTASK_STATIC_DEFINE)
 endif()
 
+
+##### Utility Targets #####
+if(MTASK_ENABLE_FORMAT)
+	message(STATUS "mtask: Generating formatting target.")
+	include(cmake/lint-targets.cmake)
+endif()
+
+
 ##### Additional Artifacts #####
 # Examples
 if(MTASK_BUILD_ALL OR MTASK_BUILD_EXAMPLES)
@@ -85,10 +93,17 @@ if(MTASK_BUILD_ALL OR MTASK_BUILD_TESTS)
 endif()
 
 # Benchmarks
-if(MTASK_BUILD_BENCHMARKS OR MTASK_BUILD_BENCHMARKS)
+if(MTASK_BUILD_ALL OR MTASK_BUILD_BENCHMARKS)
 	message(STATUS "mtask: Building benchmarks.")
 	add_subdirectory(bench)
 endif()
+
+# Documentation
+if(MTASK_BUILD_ALL OR MTASK_BUILD_BENCHMARKS)
+	message(STATUS "mtask: Building documentation.")
+	include(cmake/docs.cmake)
+endif()
+
 
 ##### Install #####
 if(MTASK_INSTALL)

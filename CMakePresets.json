@@ -24,11 +24,27 @@
     },
     {
       "name": "conan",
-      "description": "Support the Conan package manager.",
+      "description": "Use Conan package manager.",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/generators/conan_toolchain.cmake",
         "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+      }
+    },
+    {
+      "name": "doxygen",
+      "description": "Use doxygen documentation generator.",
+      "hidden": true,
+      "cacheVariables": {
+        "MTASK_BUILD_DOCS": "ON"
+      }
+    },
+    {
+      "name": "clang-format",
+      "description": "Use clang-format formatting tool",
+      "hidden": true,
+      "cacheVariables": {
+        "MTASK_ENABLE_FORMAT": "ON"
       }
     },
     {
@@ -197,7 +213,7 @@
     {
       "name": "ci-ubuntu",
       "description": "Continuous integration settings for building on Ubuntu",
-      "inherits": [ "ci-build", "ci-unix", "clang-tidy", "conan", "cppcheck" ]
+      "inherits": [ "ci-build", "ci-unix", "clang-tidy", "conan", "cppcheck", "doxygen" ]
     },
     {
       "name": "ci-windows",
