@@ -10,6 +10,7 @@ project(
 	LANGUAGES CXX
 )
 
+include(GNUInstallDirs)
 include(cmake/project-is-top-level.cmake)
 include(cmake/options.cmake)
 
@@ -44,7 +45,6 @@ target_link_libraries( mtask_mtask
 )
 
 ##### Additional Artifacts #####
-
 # Examples
 if(MTASK_BUILD_ALL OR MTASK_BUILD_EXAMPLES)
 	add_subdirectory(example)
@@ -58,4 +58,9 @@ endif()
 # Benchmarks
 if(MTASK_BUILD_BENCHMARKS OR MTASK_BUILD_BENCHMARKS)
 	add_subdirectory(bench)
+endif()
+
+##### Install #####
+if(MTASK_INSTALL)
+	include(cmake/install-rules.cmake)
 endif()

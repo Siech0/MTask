@@ -10,5 +10,8 @@ option(MTASK_BUILD_EXAMPLES "Build example artifacts." ${PROJECT_IS_TOP_LEVEL})
 # Build tests
 option(MTASK_BUILD_TESTS "Build test artifacts." OFF)
 
-# Build bencharmsk
+# Build benchmarks
 option(MTASK_BUILD_BENCHMARKS "Build benchmark artifacts." OFF)
+
+# Generate install targets
+option(MTASK_INSTALL "Generate install targets." ${PROJECT_IS_TOP_LEVEL})
