@@ -1,3 +1,9 @@
+# Keep cmake in the right place
+*.cmake
+!cmake/*
+CMakeLists/
+CMakeCache.txt
+
 # IDE
 .idea/
 .vs/

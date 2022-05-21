@@ -1,0 +1,208 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 14,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "cmake-pedantic",
+      "description": "Enable CMake pedantic error and warning checking.",
+      "hidden": true,
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true,
+        "systemVars": false
+      },
+      "errors": {
+        "dev": true,
+        "deprecated": true
+      }
+    },
+    {
+      "name": "conan",
+      "description": "Support the Conan package manager.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/generators/conan_toolchain.cmake",
+        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+      }
+    },
+    {
+      "name": "cppcheck",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_CPPCHECK": "cppcheck;--inline-suppr",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "clang-tidy",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--header-filter=${sourceDir}/*",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "strict-std20",
+      "description": "Force c++20 with no extensions.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+      }
+    },
+    {
+      "name": "strict-std17",
+      "description": "Force c++17 with no extensions.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_CXX_STANDARD": "17",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+      }
+    },
+    {
+      "name": "strict-std14",
+      "description": "Force c++14 with no extensions.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_CXX_STANDARD": "14",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+      }
+    },
+    {
+      "name": "strict-std11",
+      "description": "Force c++11 with no extensions.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+      }
+    },
+    {
+      "name": "warnings-unix",
+      "description": "Compiler warning flags for gcc + clang.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wshadow -Wformat=2 -Wundef -Werror=float-equal"
+      }
+    },
+    {
+      "name": "warnings-msvc",
+      "description": "Compiler warnings for msvc.",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/utf-8 /W4 /permissive- /volatile:iso /Zc:preprocessor /EHsc /Zc:__cplusplus /Zcc:externConstexpr /Zc:throwingNew"
+      }
+    },
+    {
+      "name": "cmake-gen-make",
+      "description": "Build using Unix Makefiles.",
+      "hidden": true,
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": "cmake-gen-vs17",
+      "description": "Build using Visual Studio 17.",
+      "hidden": true,
+      "generator": "Visual Studio 17 2022"
+    },
+    {
+      "name": "cmake-gen-vs16",
+      "description": "Build using Visual Studio 16.",
+      "hidden": true,
+      "generator": "Visual Studio 16 2019"
+    },
+    {
+      "name": "cmake-gen-ninja",
+      "description": "Build using Ninja.",
+      "hidden": true,
+      "generator": "Ninja"
+    },
+    {
+      "name": "cmake-gen-ninja-multi",
+      "description": "Build using Ninja Multi-Config.",
+      "hidden": true,
+      "generator": "Ninja Multi-Config"
+    },
+    {
+      "name": "ci-unix",
+      "description": "Continuous integration settings for MacOS + Linux.",
+      "hidden": true,
+      "inherits": [ "warnings-unix", "strict-std20", "cmake-gen-make" ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ci-win64",
+      "description": "Continuous integration settings for Windows.",
+      "hidden": true,
+      "inherits": [ "warnings-msvc", "strict-std20", "cmake-gen-vs17" ],
+      "architecture": "x64"
+    },
+    {
+      "name": "coverage-unix",
+      "description": "Settings for code coverage on MacOS + Linux.",
+      "hidden": true,
+      "inherits": "ci-unix",
+      "binaryDir": "${sourceDir}/build/coverage",
+      "cacheVariables": {
+        "MTASK_ENABLE_COVERAGE": "ON",
+        "CMAKE_BUILD_TYPE": "Coverage",
+        "CMAKE_CXX_FLAGS_COVERAGE": "-Og -g --coverage -fkeep-inline-functions -fkeep-static-functions",
+        "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
+        "CMAKE_SHARED_LINKER_FLAGS_COVERAGE": "--coverage",
+        "CMAKE_MAP_IMPORTED_CONFIG_COVERAGE": "Coverage;RelWithDebInfo;Release;Debug;"
+      }
+    },
+    {
+      "name": "ci-coverage",
+      "description": "Continuous integration settings for code coverage generation.",
+      "inherits": [ "coverage-unix", "conan" ],
+      "cacheVariables": {
+        "COVERAGE_HTML_COMMAND": ""
+      }
+    },
+    {
+      "name": "ci-sanitize",
+      "description": "Continuous integration settings for code sanitization.",
+      "inherits": [ "ci-unix", "conan" ],
+      "binaryDir": "${sourceDir}/build/sanitize",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Sanitize",
+        "CMAKE_CXX_FLAGS_SANITIZE": "-O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common",
+        "CMAKE_MAP_IMPORTED_CONFIG_SANITIZE": "Sanitize;RelWithDebInfo;Release;Debug;"
+      }
+    },
+    {
+      "name": "ci-build",
+      "description": "Continuous integration settings for setting up build directories.",
+      "binaryDir": "${sourceDir}/build",
+      "hidden": true
+    },
+    {
+      "name": "ci-macos",
+      "description": "Continuous integration settings for building on MacOS",
+      "inherits": [ "ci-build", "ci-unix", "conan" ]
+    },
+    {
+      "name": "ci-ubuntu",
+      "description": "Continuous integration settings for building on Ubuntu",
+      "inherits": [ "ci-build", "ci-unix", "clang-tidy", "conan", "cppcheck" ]
+    },
+    {
+      "name": "ci-windows",
+      "description": "Continuous integration settings for building on Windows.",
+      "inherits": [ "ci-build", "ci-win64", "conan" ]
+    }
+  ]
+}
