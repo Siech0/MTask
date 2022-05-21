@@ -18,7 +18,8 @@ class ConanRecipe(ConanFile):
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     
-    # Package exports/imports
+    # Package exports/imports/requires
+    build_requires = "gtest/cci.20210126"
     exports_sources = "CMakeLists.txt", "cmake/*", "src/*", "include/*"
 
     def config_options(self):

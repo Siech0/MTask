@@ -74,20 +74,24 @@ endif()
 ##### Additional Artifacts #####
 # Examples
 if(MTASK_BUILD_ALL OR MTASK_BUILD_EXAMPLES)
+	message(STATUS "mtask: Building examples.")
 	add_subdirectory(example)
 endif()
 
 # Tests
 if(MTASK_BUILD_ALL OR MTASK_BUILD_TESTS)
+	message(STATUS "mtask: Building tests.")
 	add_subdirectory(test)
 endif()
 
 # Benchmarks
 if(MTASK_BUILD_BENCHMARKS OR MTASK_BUILD_BENCHMARKS)
+	message(STATUS "mtask: Building benchmarks.")
 	add_subdirectory(bench)
 endif()
 
 ##### Install #####
 if(MTASK_INSTALL)
+	message(STATUS "mtask: Generating install target.")
 	include(cmake/install-rules.cmake)
 endif()
