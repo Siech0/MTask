@@ -67,14 +67,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
       && github.event_name == 'push'
-      && github.repository_owner == 'Siech0'
+      && github.repository_owner == 'siech0'
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with: { python-version: "3.8" }
     - name: Install Doxygen
       run: sudo apt-get update -q
-        && sudo apt-ghet install doxygen -q -y
+        && sudo apt-get install doxygen -q -y
     - name: Build docs
       uses: mattnotmitt/doxygen-action@1.9.1
       with:
