@@ -79,7 +79,7 @@ jobs:
     #  as cmake will output the relevant Doxyfile.
     - name: Configure
       shell: pwsh
-      run: cmake "--preset=ci-ubuntu
+      run: cmake --preset=ci-ubuntu
     - name: Build docs
       uses: mattnotmitt/doxygen-action@1.9.1
       with:
