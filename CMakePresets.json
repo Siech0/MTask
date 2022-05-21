@@ -116,7 +116,7 @@
       "description": "Compiler warnings for msvc.",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "/utf-8 /W4 /permissive- /volatile:iso /Zc:preprocessor /EHsc /Zc:__cplusplus /Zcc:externConstexpr /Zc:throwingNew"
+        "CMAKE_CXX_FLAGS": "/utf-8 /W4 /permissive- /volatile:iso /Zc:preprocessor /EHsc /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew"
       }
     },
     {
@@ -218,7 +218,7 @@
     {
       "name": "ci-windows",
       "description": "Continuous integration settings for building on Windows.",
-      "inherits": [ "ci-build", "ci-win64", "conan" ]
+      "inherits": ["ci-build", "ci-win64", "conan"]
     }
   ]
 }
