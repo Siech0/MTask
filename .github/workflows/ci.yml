@@ -16,7 +16,7 @@ jobs:
     - uses: actions/setup-python@v2
       with: { python-version: "3.8" }
     - name: Format
-      run: cmake -D FORMAT_COMMAND=clang-format-12 -p cmake/lint.cmake
+      run: cmake -D FORMAT_COMMAND=clang-format-12 -P cmake/lint.cmake
   
   test:
     needs: [lint]
