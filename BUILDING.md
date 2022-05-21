@@ -65,18 +65,18 @@ cmake --install build --config Release
 This project exports a CMake package to be used with the [`find_package`][3]
 command of CMake:
 
-* Package name: `mtask2`
-* Target name: `mtask2::mtask2`
+* Package name: `mtask`
+* Target name: `mtask::mtask`
 
 Example usage:
 
 ```cmake
-find_package(mtask2 REQUIRED)
+find_package(mtask REQUIRED)
 # Declare the imported target as a build requirement using PRIVATE, where
 # project_target is a target created in the consuming project
 target_link_libraries(
     project_target PRIVATE
-    mtask2::mtask2
+    mtask::mtask
 )
 ```
 

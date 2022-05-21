@@ -1,4 +1,4 @@
-# mtask
+# MTask (Many-Task)
 
 This is the mtask project.
 
