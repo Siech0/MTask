@@ -23,11 +23,6 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-2022]
-        type: [shared, static]
-        include:
-        - { type: shared, shared: YES }
-        - { type: static, shared: NO }
-
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -49,7 +44,6 @@ jobs:
     - name: Configure
       shell: pwsh
       run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
-        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
     - name: Build
       run: cmake --build build --config Release -j 2
     - name: Install
@@ -72,9 +66,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with: { python-version: "3.8" }
-    - name: Install Doxygen
+    - name: Install Dependencies
       run: sudo apt-get update -q
-        && sudo apt-get install doxygen -q -y
+        && sudo apt-get install doxygen build-essential make -q -y
     # We need to configure cmake before generating documentation
     #  as cmake will output the relevant Doxyfile.
     - name: Configure
