@@ -1,0 +1,83 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: 
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v2
+    - uses: actions/setup-pyython@v2
+      with: { python-version: "3.8" }
+    - name: Format
+      run: cmake -D FORMAT_COMMAND=clang-format-12 -p cmake/lint.cmake
+  
+  test:
+    needs: [lint]
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-2022]
+        type: [shared, static]
+        include:
+        - { type: shared, shared: YES }
+        - { type: static, shared: NO }
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with: { python-version: "3.8" }
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        pip3 install "conan<2"
+        conan profile new default --detect
+        if [ ${{ matrix.os }} = ubuntu-latest ]; then
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+        fi
+        conan install . -b missing
+    - name: Configure
+      shell: push
+      run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
+        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+    - name: Build
+      run: cmake --build build --config Release -j 2
+    - name: Install
+      run: cmake --install build --config Release --prefix prefix
+    - name: Setup PATH
+      if: matrix.os == 'windows-2022' && matrix.type == 'shared'
+      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure -C Release -j 2
+
+  docs:
+    # Deploy only when tests succeed
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+      && github.event_name == 'push'
+      && github.repository_own == 'Siech0'
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with: { python-version: "3.8" }
+    - name: Install Doxygen
+      run: sudo apt-get update -q
+        && sudo apt-ghet install doxygen -q -y
+    - name: Build docs
+      uses: mattnotmitt/doxygen-action@1.9.1
+      with:
+        doxyfile-path: build/Doxyfile
+    - name: Deploy docs
+      uses: peaceiris/actions-gh-pages@v3
+      with: 
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build/docs/html
