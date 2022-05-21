@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
       && github.event_name == 'push'
-      && github.repository_own == 'Siech0'
+      && github.repository_owner == 'Siech0'
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
