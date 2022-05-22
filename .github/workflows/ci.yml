@@ -7,13 +7,90 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - uses: actions/checkout@v2
+
     - uses: actions/setup-python@v2
       with: { python-version: "3.8" }
+
+    - name: Install Codespell
+      run: pip3 install codespell
+
     - name: Format
       run: cmake -D FORMAT_COMMAND=clang-format-12 -P cmake/lint.cmake
+
     - name: Spellcheck
       run: cmake -P cmake/spell.cmake
   
+  analyze:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with: { python-version: "3.8" }
+
+    - name: Create Build Environment
+      run: |
+        sudo apt update
+        sudo apt install clang-tidy cppcheck
+        pip3 install "conan<2"
+        conan profile new default --detect
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install . -b missing
+
+    - name: Install dependencies
+      run: pip3 install "conan<2"
+        && conan profile new default --detect
+        && cp .github/clang-12.profile ~/.conan/profiles/default
+        && conan install . -b missing
+
+    - name: Configure
+      run: cmake "--preset=ci-analyze-unix"  . 
+
+    - name: Build
+      run: |
+        threads=`nproc`
+        cmake --build build --config ${{ matrix.build_type }} --parallel $threads
+    
+  sanitize:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with: { python-version: "3.8" }
+
+    - name: Install dependencies
+      run: pip3 install "conan<2"
+        && conan profile new default --detect
+        && cp .github/clang-12.profile ~/.conan/profiles/default
+        && conan install . -b missing
+
+    - name: Configure
+      env: { CXX: clang++12 }
+      run: cmake --preset=ci-sanitize
+
+    - name: Build
+      run: |
+        threads=`nproc`
+        cmake --build build/sanitize --config Release --parallel $threads
+
+    - name: test
+      working-directory: build/sanitize
+      env:
+        ASAN_OPTIONS: "strict_string_checks=1:\
+          detect_stack_use_after_return=1:\
+          check_initialization_order=1:\
+          strict_init_order=1:\
+          detect_leaks=1"
+        UBSAN_OPTIONS: print_stacktrace=1
+      run: |
+        threads=`nproc`
+        ctest --output-on-failure -j $threads
+
+
   test-linux:
     needs: [lint]
     runs-on: ${{ matrix.os }}
@@ -140,7 +217,7 @@ jobs:
 
   docs:
     # Deploy only when tests succeed
-    needs: [test-linux, test-windows, test-macos]
+    needs: [test-linux, test-windows, test-macos, sanitize, analyze]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
       && github.event_name == 'push'

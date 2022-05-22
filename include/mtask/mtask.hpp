@@ -4,5 +4,5 @@
 namespace mtask
 {
 MTASK_EXPORT
-int test();
+auto test() -> int;
 } // namespace mtask

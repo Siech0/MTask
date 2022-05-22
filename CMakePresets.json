@@ -210,6 +210,18 @@
       "hidden": true
     },
     {
+      "name": "ci-analyze",
+      "description": "Continuous integration settings for static-analysis",
+      "hidden": true,
+      "inherits": [ "cppcheck", "clang-tidy" ]
+    },
+    {
+      "name": "ci-analyze-unix",
+      "description": "Continuous integration settings for static-analysis on unix",
+      "hidden": true,
+      "inherits": [ "ci-analyze", "ci-unix"]
+    },
+    {
       "name": "ci-docs",
       "description": "Continuous integration settings for document generation.",
       "hidden": true,

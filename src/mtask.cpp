@@ -2,5 +2,5 @@
 
 namespace mtask
 {
-	int test() { return 42; }
-}
+	auto test() -> int { return 42; } // NOLINT
+} // namespace mtask

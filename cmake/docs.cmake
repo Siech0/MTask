@@ -11,7 +11,7 @@ if(DOXYGEN_FOUND)
     configure_file("${DOXYGEN_IN}" "${DOXYGEN_OUT}" @ONLY)
     
     # Create the doxygen documentation generation target
-    message("Generating Doxygen target.")
+    message(STATUS "Generating Doxygen target.")
     add_custom_target( mtask-doxygen
         COMMAND "${DOXYGEN_EXECUTABLE}" "${DOXYGEN_OUT}"
         WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
