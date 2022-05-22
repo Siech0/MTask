@@ -64,6 +64,7 @@ jobs:
         pip3 install "conan<2"
         conan profile new default --detect
         conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install . -b missing
     
     - name: Configure
       env: 
@@ -97,14 +98,20 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with: { python-version: "3.8" }
+
+    - name: Install Dependencies
+      run: |
+        pip3 install "conan<2"
+        conan profile new default --detect 
+        conan install . -b missing
+
     - name: Configure
       run: |
-        cmake "--preset=ci-windows" . \ 
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DBUILD_SHARED_LIBS=${{ matrix.shared }} \
-          -DCMAKE_CXX_STANDARD=${{ matrix.standard }} \
-          -A ${{ matrix.platform }}
-
+        cmake -A ${{ matrix.platform }} -DCMAKE_CXX_STANDARD=${{ matrix.standard }} -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} --preset=ci-windows . 
+          
     - name: Build
       run: |
         $threads = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
@@ -129,12 +136,20 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with: { python-version: "3.8" }
+
+    - name: Install Dependencies
+      run: |
+        pip3 install "conan<2"
+        conan profile new default --detect 
+        conan install . -b missing
+
     - name: Configure
       run: |
-        cmake "--preset=ci-macos" . \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DBUILD_SHARED_LIBS=${{ matrix.shared }} 
-    
+        cmake -DBUILD_SHARED_LIBS=${{ matrix.shared }}  -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} --preset=ci-macos .
+          
     - name: Build
       run: |
         threads=`sysctl -n hw.logicalcpu`
