@@ -68,9 +68,9 @@ jobs:
     - name: Configure
       env: 
         CXX: ${{ matrix.cxx }}
-      run: cmake "--preset=ci-ubuntu"  \
-        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+      run: cmake "--preset=ci-ubuntu"  . \
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+        -DBUILD_SHARED_LIBS=${{ matrix.shared }}
     
     - name: Build
       run: |
@@ -99,10 +99,10 @@ jobs:
 
     - name: Configure
       run: |
-        cmake "--preset=ci-windows" \ 
+        cmake "--preset=ci-windows" . \ 
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -D BUILD_SHARED_LIBS=${{ matrix.shared }} \
-          -D CMAKE_CXX_STANDARD=${{ matrix.standard }} \
+          -DBUILD_SHARED_LIBS=${{ matrix.shared }} \
+          -DCMAKE_CXX_STANDARD=${{ matrix.standard }} \
           -A ${{ matrix.platform }}
 
     - name: Build
@@ -131,9 +131,9 @@ jobs:
 
     - name: Configure
       run: |
-        cmake "--preset=ci-macos" \
-          -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -D BUILD_SHARED_LIBS=${{ matrix.shared }} 
+        cmake "--preset=ci-macos" . \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DBUILD_SHARED_LIBS=${{ matrix.shared }} 
     
     - name: Build
       run: |
