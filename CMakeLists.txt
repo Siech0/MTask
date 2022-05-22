@@ -99,7 +99,7 @@ if(MTASK_BUILD_ALL OR MTASK_BUILD_BENCHMARKS)
 endif()
 
 # Documentation
-if(MTASK_BUILD_ALL OR MTASK_BUILD_BENCHMARKS)
+if(MTASK_BUILD_ALL OR MTASK_BUILD_DOCS)
 	message(STATUS "mtask: Building documentation.")
 	include(cmake/docs.cmake)
 endif()
