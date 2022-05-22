@@ -17,33 +17,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        cxx: [g++-4.8, g++-10, clang++-9]
+        cxx: [g++, clang++]
         build_type: [Debug, Release]
         std: [20]
         os: [ubuntu-latest]
         include:
-          - cxx: g++-8
-            build_type: Debug
-            std: 14
-            install: sudo apt install g++-8
-            os: ubuntu-18.04
-          - cxx: g++-10
-            build_type: Debug
-            std: 17
-            os: ubuntu-18.04
-          - cxx: g++-11
-            build_type: Debug
-            std: 20
-            os: ubuntu-20.04
-            install: sudo apt install g++-11
-          - cxx: clang++-9
-            build_type: Debug
-            std: 17
-            os: ubuntu-18.04
-          - cxx: clang++-11
-            build_type: Debug
-            std: 20
-            os: ubuntu-20.04
           - shared: ON
 
     steps:
@@ -55,9 +33,8 @@ jobs:
 
     - name: Create Build Environment
       run: |
-        ${{matrix.install}}
         sudo apt update
-        sudo apt install locales-all
+        sudo apt install locales-all ${{ matrix.install }}
         pip3 install "conan<2"
         conan profile new default --detect
         conan profile update settings.compiler.libcxx=libstdc++11 default
