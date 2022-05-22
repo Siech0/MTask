@@ -22,9 +22,6 @@ jobs:
         std: [20]
         os: [ubuntu-latest]
         include:
-          - cxx: g++-4.8
-            install: sudo apt install g++-4.8
-            os: ubuntu-18.04
           - cxx: g++-8
             build_type: Debug
             std: 14
