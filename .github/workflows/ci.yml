@@ -66,10 +66,9 @@ jobs:
         conan profile update settings.compiler.libcxx=libstdc++11 default
     
     - name: Configure
-      shell: pwsh
       env: 
         CXX: ${{ matrix.cxx }}
-      run: cmake --preset=ci-ubuntu  \
+      run: cmake "--preset=ci-ubuntu"  \
         -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} \
         -D BUILD_SHARED_LIBS=${{ matrix.shared }}
     
@@ -94,12 +93,13 @@ jobs:
         platform: [Win32, x64]
         build_type: [Debug, Release]
         standard: [20]
+
     steps:
     - uses: actions/checkout@v2
 
     - name: Configure
       run: |
-        cmake --preset=ci-windows \ 
+        cmake "--preset=ci-windows" \ 
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -D BUILD_SHARED_LIBS=${{ matrix.shared }} \
           -D CMAKE_CXX_STANDARD=${{ matrix.standard }} \
@@ -131,7 +131,7 @@ jobs:
 
     - name: Configure
       run: |
-        cmake --preset=ci-macos \
+        cmake "--preset=ci-macos" \
           -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -D BUILD_SHARED_LIBS=${{ matrix.shared }} 
     
