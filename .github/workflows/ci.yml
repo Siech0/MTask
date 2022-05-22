@@ -82,7 +82,7 @@ jobs:
       shell: pwsh
       run: cmake --preset=ci-ubuntu
     - name: Run doxygen
-      shll: pwsh
+      shell: pwsh
       run: |
         cd build
         ls
