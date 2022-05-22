@@ -1,5 +1,5 @@
 # MTask (Many-Task)
-
+![example workflow](https://github.com/Siech0/MTask/actions/workflows/ci.yml/badge.svg)
 This is the mtask project.
 
 # Building and installing

@@ -206,6 +206,20 @@
       "hidden": true
     },
     {
+      "name": "ci-docs",
+      "description": "Continuous integration settings for document generation.",
+      "hidden": true,
+      "inherits": ["ci-build", "conan"],
+      "cacheVariables": {
+        "MTASK_BUILD_DOCS": "ON"
+      }
+    },
+    {
+      "name": "ci-docs-unix",
+      "description": "Continuous integration settings for document generation on MacOS + Ubuntu.",
+      "inherits": ["ci-docs", "ci-unix"]
+    },
+    {
       "name": "ci-macos",
       "description": "Continuous integration settings for building on MacOS",
       "inherits": [ "ci-build", "ci-unix", "conan" ]

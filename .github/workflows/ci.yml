@@ -80,7 +80,7 @@ jobs:
         conan install . -b missing
     - name: Configure
       shell: pwsh
-      run: cmake --preset=ci-ubuntu
+      run: cmake --preset=ci-docs-unix
     - name: Run doxygen
       shell: pwsh
       run: |
