@@ -11,6 +11,8 @@ jobs:
       with: { python-version: "3.8" }
     - name: Format
       run: cmake -D FORMAT_COMMAND=clang-format-12 -P cmake/lint.cmake
+    - name: Spellcheck
+      run: cmake -P cmake/spell.cmake
   
   test-linux:
     needs: [lint]
