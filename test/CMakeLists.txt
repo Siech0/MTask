@@ -3,14 +3,14 @@ cmake_minimum_required(VERSION 3.14)
 project(mtask-tests LANGUAGES CXX)
 enable_testing()
 
-##### Dependency Managment #####
+##### Dependency Management #####
 
 find_package(GTest REQUIRED)
 if(NOT TARGET mtask::mtask)
     find_package(mtask REQUIRED)
 endif()
 
-###### Test Exectuable #####
+###### Test Exectutable #####
 add_executable(mtask-tests
     src/sanity-tests.cpp
 )

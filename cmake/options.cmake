@@ -21,3 +21,6 @@ option(MTASK_INSTALL "Generate install targets." ${PROJECT_IS_TOP_LEVEL})
 
 # Enable linting
 option(MTASK_ENABLE_FORMAT "Generate clang-format targets." OFF)
+
+# Enable spell checking
+option(MTASK_ENABLE_SPELLCHECK "Generating spell-check targets." OFF)

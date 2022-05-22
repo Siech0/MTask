@@ -41,10 +41,18 @@
     },
     {
       "name": "clang-format",
-      "description": "Use clang-format formatting tool",
+      "description": "Use clang-format formatting tool.",
       "hidden": true,
       "cacheVariables": {
         "MTASK_ENABLE_FORMAT": "ON"
+      }
+    },
+    {
+      "name": "spell-check",
+      "description": "Use codespell spell-checking tool.",
+      "hidden": true,
+      "cacheVariables": {
+        "MTASK_ENABLE_SPELLCHECK": "ON"
       }
     },
     {

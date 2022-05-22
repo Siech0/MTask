@@ -71,11 +71,15 @@ if(NOT BUILD_SHARED_LIBS)
 	target_compile_definitions(mtask_mtask PUBLIC MTASK_STATIC_DEFINE)
 endif()
 
-
 ##### Utility Targets #####
 if(MTASK_ENABLE_FORMAT)
 	message(STATUS "mtask: Generating formatting target.")
 	include(cmake/lint-targets.cmake)
+endif()
+
+if(MTASK_ENABLE_SPELLCHECK)
+	message(STATUS "mtask: Generating spellcheck target.")
+	include(cmake/spell-targets.cmake)
 endif()
 
 
