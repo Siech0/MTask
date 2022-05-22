@@ -61,7 +61,7 @@ jobs:
     - name: Create Build Environment
       run: |
         sudo apt update
-        sudo apt install locales-all
+        sudo apt install locales-all clang-12
         pip3 install "conan<2"
         conan profile new default --detect
         conan profile update settings.compiler.libcxx=libstdc++11 default

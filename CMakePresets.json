@@ -218,7 +218,6 @@
     {
       "name": "ci-analyze-unix",
       "description": "Continuous integration settings for static-analysis on unix",
-      "hidden": true,
       "inherits": [ "ci-analyze", "ci-unix"]
     },
     {
