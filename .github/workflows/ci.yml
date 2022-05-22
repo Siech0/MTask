@@ -12,46 +12,143 @@ jobs:
     - name: Format
       run: cmake -D FORMAT_COMMAND=clang-format-12 -P cmake/lint.cmake
   
-  test:
+  test-linux:
     needs: [lint]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-2022]
-    runs-on: ${{ matrix.os }}
+        cxx: [g++-4.8, g++-10, clang++-9]
+        build_type: [Debug, Release]
+        std: [20]
+        os: [ubuntu-latest]
+        include:
+          - cxx: g++-4.8
+            install: sudo apt install g++-4.8
+            os: ubuntu-18.04
+          - cxx: g++-8
+            build_type: Debug
+            std: 14
+            install: sudo apt install g++-8
+            os: ubuntu-18.04
+          - cxx: g++-10
+            build_type: Debug
+            std: 17
+            os: ubuntu-18.04
+          - cxx: g++-11
+            build_type: Debug
+            std: 20
+            os: ubuntu-20.04
+            install: sudo apt install g++-11
+          - cxx: clang++-9
+            build_type: Debug
+            std: 17
+            os: ubuntu-18.04
+          - cxx: clang++-11
+            build_type: Debug
+            std: 20
+            os: ubuntu-20.04
+          - shared: ON
+
     steps:
     - uses: actions/checkout@v2
-    - name: Install static analyzers
-      if: matrix.os == 'ubuntu-latest'
-      run: sudo sudo apt-get install clang-tidy cppcheck -y -q
+
     - name: Install Python
       uses: actions/setup-python@v2
       with: { python-version: "3.8" }
-    - name: Install Dependencies
-      shell: bash
+
+    - name: Create Build Environment
       run: |
+        ${{matrix.install}}
+        sudo apt update
+        sudo apt install locales-all
         pip3 install "conan<2"
         conan profile new default --detect
-        if [ ${{ matrix.os }} = ubuntu-latest ]; then
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-        fi
-        conan install . -b missing
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+    
     - name: Configure
       shell: pwsh
-      run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
+      env: 
+        CXX: ${{ matrix.cxx }}
+      run: cmake --preset=ci-ubuntu  \
+        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+    
     - name: Build
-      run: cmake --build build --config Release -j 2
-    - name: Install
-      run: cmake --install build --config Release --prefix prefix
-    - name: Setup PATH
-      if: matrix.os == 'windows-2022' && matrix.type == 'shared'
-      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
+      run: |
+        threads=`nproc`
+        cmake --build build --config ${{ matrix.build_type }} --parallel $threads
+
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure -C Release -j 2
+      run: |
+        threads=`nproc`
+        ctest -C ${{ matrix.build_type }} -j $threads
+
+
+  test-windows:
+    needs: [lint]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022]
+        platform: [Win32, x64]
+        build_type: [Debug, Release]
+        standard: [20]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure
+      run: |
+        cmake --preset=ci-windows \ 
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -D BUILD_SHARED_LIBS=${{ matrix.shared }} \
+          -D CMAKE_CXX_STANDARD=${{ matrix.standard }} \
+          -A ${{ matrix.platform }}
+
+    - name: Build
+      run: |
+        $threads = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
+        cmake --build build --config ${{ matrix.build_type }} --parallel $threads
+
+    - name: Test
+      working-directory: build
+      run: |
+        $threads = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
+        ctest -C ${{ matrix.build_type }} --output-on-failure -j $threads
+        
+
+  test-macos:
+    needs: [lint]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+        include: 
+          - shared: ON
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure
+      run: |
+        cmake --preset=ci-macos \
+          -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -D BUILD_SHARED_LIBS=${{ matrix.shared }} 
+    
+    - name: Build
+      run: |
+        threads=`sysctl -n hw.logicalcpu`
+        cmake --build build --config ${{ matrix.build_type }} --parallel $threads
+    
+    - name: Test
+      working-directory: build
+      run: |
+        threads=`sysctl -n hw.logicalcpu`
+        ctest -C ${{ matrix.build_type}} --output-on-failure -j $threads
 
   docs:
     # Deploy only when tests succeed
-    needs: [test]
+    needs: [test-linux, test-windows, test-macos]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
       && github.event_name == 'push'
@@ -83,7 +180,6 @@ jobs:
         doxygen
     - name: Deploy docs
       uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/master'
       with: 
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: build/html
