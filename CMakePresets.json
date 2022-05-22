@@ -153,17 +153,13 @@
       "name": "ci-unix",
       "description": "Continuous integration settings for MacOS + Linux.",
       "hidden": true,
-      "inherits": [ "warnings-unix", "strict-std20", "cmake-gen-make" ],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
+      "inherits": [ "warnings-unix", "strict-std20", "cmake-gen-make" ]
     },
     {
       "name": "ci-win64",
       "description": "Continuous integration settings for Windows.",
       "hidden": true,
-      "inherits": [ "warnings-msvc", "strict-std20", "cmake-gen-vs17" ],
-      "architecture": "x64"
+      "inherits": [ "warnings-msvc", "strict-std20", "cmake-gen-vs17" ]
     },
     {
       "name": "coverage-unix",
@@ -227,7 +223,7 @@
     {
       "name": "ci-ubuntu",
       "description": "Continuous integration settings for building on Ubuntu",
-      "inherits": [ "ci-build", "ci-unix", "clang-tidy", "conan", "cppcheck", "doxygen" ]
+      "inherits": [ "ci-build", "ci-unix", "conan" ]
     },
     {
       "name": "ci-windows",
