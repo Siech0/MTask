@@ -103,6 +103,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [macos-latest]
         build_type: [Debug, Release]
         include: 
           - shared: ON
