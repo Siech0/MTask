@@ -81,10 +81,12 @@ jobs:
     - name: Configure
       shell: pwsh
       run: cmake --preset=ci-ubuntu
-    - name: Build docs
-      uses: mattnotmitt/doxygen-action@1.9.1
-      with:
-        working-directory: build
+    - name: Run doxygen
+      shll: pwsh
+      run: |
+        cd build
+        ls
+        doxygen
     - name: Deploy docs
       uses: peaceiris/actions-gh-pages@v3
       with: 
