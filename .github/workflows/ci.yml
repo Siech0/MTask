@@ -46,7 +46,7 @@ jobs:
     - name: Build
       run: |
         threads=`nproc`
-        cmake --build build --config ${{ matrix.build_type }} --parallel $threads
+        cmake --build build --config Release --parallel $threads
     
   sanitize:
     needs: [lint]
@@ -68,7 +68,7 @@ jobs:
         conan install . -b missing
 
     - name: Configure
-      env: { CXX: clang++12 }
+      env: { CXX: clang++11 }
       run: cmake --preset=ci-sanitize
 
     - name: Build
