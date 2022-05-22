@@ -8,7 +8,8 @@ jobs:
     steps: 
     - uses: actions/checkout@v2
 
-    - uses: actions/setup-python@v2
+    - name: Install Python
+      uses: actions/setup-python@v2
       with: { python-version: "3.8" }
 
     - name: Install Codespell
@@ -26,23 +27,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: actions/setup-python@v2
+    - name: Install Python
+      uses: actions/setup-python@v2
       with: { python-version: "3.8" }
 
     - name: Create Build Environment
       run: |
         sudo apt update
-        sudo apt install clang-tidy cppcheck
+        sudo apt install locales-all clang-tidy cppcheck
         pip3 install "conan<2"
         conan profile new default --detect
         conan profile update settings.compiler.libcxx=libstdc++11 default
         conan install . -b missing
-
-    - name: Install dependencies
-      run: pip3 install "conan<2"
-        && conan profile new default --detect
-        && cp .github/clang-12.profile ~/.conan/profiles/default
-        && conan install . -b missing
 
     - name: Configure
       run: cmake "--preset=ci-analyze-unix"  . 
@@ -62,11 +58,14 @@ jobs:
       uses: actions/setup-python@v2
       with: { python-version: "3.8" }
 
-    - name: Install dependencies
-      run: pip3 install "conan<2"
-        && conan profile new default --detect
-        && cp .github/clang-12.profile ~/.conan/profiles/default
-        && conan install . -b missing
+    - name: Create Build Environment
+      run: |
+        sudo apt update
+        sudo apt install locales-all
+        pip3 install "conan<2"
+        conan profile new default --detect
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install . -b missing
 
     - name: Configure
       env: { CXX: clang++12 }
